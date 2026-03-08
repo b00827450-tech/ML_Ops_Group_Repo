@@ -7,7 +7,7 @@
 * **input:**  either of city or price range min and max.
 * **What the script does:** fetch data from database and show related info.
 
-### 2. The Property Audit (Audit.py)
+### 2. The Property Audit (audit.py)
 
 * **input:** Property ID and the best guesses for monthly rent and yearly maintenance costs.
 * **What the script does:** It grabs the home's current asking price, crunches the math to find your **Return on Investment (Gross Yield %)**, saves that report to audit table, and return the final number.
