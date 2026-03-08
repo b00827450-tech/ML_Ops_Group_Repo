@@ -19,9 +19,9 @@
 
 
 ## development folder
- database.py  --defined a py file to connect to our database
- models.py    --define our tables to classes so that python can easily consume
- test.ipynb   --check how to consume our data
+ database.py  --defined a py file to connect to our database  
+ models.py    --define our tables to classes so that python can easily consume  
+ test.ipynb   --check how to consume our data  
 
 
 ## Data Structure
