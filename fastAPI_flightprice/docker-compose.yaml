@@ -1,0 +1,7 @@
+services:
+  web:
+    build: .
+    ports:
+      - "8080:8000"     # browser: http://localhost:8080
+    environment:
+      - PYTHONUNBUFFERED=1

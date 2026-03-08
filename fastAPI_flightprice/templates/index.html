@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Flight Checker</title>
+    </head>
+    <body>
+        <h1>Check Flight Price</h1>
+        
+        <form action="/check" method="post">
+            <input type="text" name="flight_num" placeholder="Enter Flight Number" required>
+            <button type="submit">Submit</button>
+        </form>
+
+        {% if price %}
+            <h2 style="color: green;">
+                The price for {{ flight_num }} is: ${{ price }}
+            </h2>
+        {% endif %}
+
+        {% if error %}
+            <h2 style="color: red;">
+                {{ error }}
+            </h2>
+        {% endif %}
+    </body>
+</html>
