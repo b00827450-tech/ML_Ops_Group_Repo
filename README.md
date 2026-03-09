@@ -1,22 +1,24 @@
 # Project Structure
 (Name your branch  dev_<function_name>, e.g. dev_search)  
-## to do :
+## to do (all under development folder):
 **important: keep it simple**
 
-### 1. The Search Function (search.py)
+### 1. The Search Function 
 * **input:**  either of city or price range min and max.
 * **What the script does:** fetch data from database and show related info.
+* **Outcome:** batch_search_dev_evaluation.ipynb (models comsume batch input and evaluation of performance)
 
 ### 2. The Property Audit (audit.py)
 
 * **input:** Property ID and the best guesses for monthly rent and yearly maintenance costs.
 * **What the script does:** It grabs the home's current asking price, crunches the math to find your **Return on Investment (Gross Yield %)**, saves that report to audit table, and return the final number.
+* **Outcome:** batch_audit_dev_evaluation.ipynb (models comsume batch input and evaluation of performance)
 
 ### 3. Anomaly Detection (The Red Flags) (anomaly.py)
 
 * **input:** Property ID
 * **What the script does:** It calculates the price-per-square-meter for that home, then compares it to the average price of *every other similar home in that exact zip code*. If it's suspiciously cheap, wildly overpriced, or missing basic info (like 0 bathrooms), it return a "red_flag" and save corresponding info in anomalies table.
-
+* **Outcome:** batch_anomaly_dev_evaluation.ipynb (models comsume batch input and evaluation of performance)
 
 ## development folder
  database.py  --defined a py file to connect to our database  
