@@ -4,7 +4,8 @@ from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 
-from database import Base # use defined function to connect to our database
+#from database import Base # use defined function to connect to our database
+from development.database import Base
 
 class Property(Base):
     __tablename__ = "properties"
