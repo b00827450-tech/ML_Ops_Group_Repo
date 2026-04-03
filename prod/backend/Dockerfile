@@ -2,13 +2,13 @@ FROM python:3.10-slim
 
 WORKDIR /app
 
-# Install deps
+# Install dependencies
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy project files
+# Copy backend files
 COPY . .
 
 EXPOSE 8000
 
-CMD ["python", "app/main.py"]
+CMD ["python", "run.py"]

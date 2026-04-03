@@ -1,117 +1,206 @@
-# Project Structure
-(Name your branch  dev_<function_name>, e.g. dev_search)  
-## to do (all under development folder):
-**important: keep it simple**
+# Real Estate Search and Audit Platform
 
-### 1. The Search Function 
-* **input:**  either of city or price range min and max.
-* **What the script does:** fetch data from database and show related info.
-* **Outcome:** batch_search_dev_evaluation.ipynb (models comsume batch input and evaluation of performance)
+A lightweight full-stack MLOps learning project for property search and investment audit workflows.
 
-### 2. The Property Audit
+---
 
-* **input:** Property ID and the best guesses for monthly rent and yearly maintenance costs.
-* **What the script does:** It grabs the home's current asking price, crunches the math to find your **Return on Investment (Gross Yield %)**, saves that report to audit table, and return the final number.
-* **Outcome:** batch_audit_dev_evaluation.ipynb (models comsume batch input and evaluation of performance)
+## 1. Executive Summary
 
-### 3. Anomaly Detection (The Red Flags)
+### Problem Statement
+Real estate analysis is often split across manual spreadsheets and disconnected data tools, making it slow to compare listings and evaluate investment quality.
 
-* **input:** Property ID
-* **What the script does:** It calculates the price-per-square-meter for that home, then compares it to the average price of *every other similar home in that exact zip code*. If it's suspiciously cheap, wildly overpriced, or missing basic info (like 0 bathrooms), it return a "red_flag" and save corresponding info in anomalies table.
-* **Outcome:** batch_anomaly_dev_evaluation.ipynb (models comsume batch input and evaluation of performance)
+### The Solution
+This project provides a simple API + frontend workflow to:
+- search properties by city and price range,
+- audit a property's gross yield from listing price,
+- expose the results through a minimal React UI.
 
-## development folder
- database.py  --defined a py file to connect to our database  
- models.py    --define our tables to classes so that python can easily consume  
- test.ipynb   --check how to consume our data  
+### Target Persona
+- Internal analysts and students exploring MLOps/API patterns
+- Product and data teams prototyping property intelligence features
 
+### Value Proposition
+- Faster decision support for property filtering and basic ROI checks
+- Clear separation between development notebooks and production API
+- Practical end-to-end reference architecture (DB -> FastAPI -> React)
 
-## Data Structure
-1. **properties Table** (The Parent)
-- id: UUID [Primary Key] (Auto-generates via uuid4)
-- address: VARCHAR(255) [Not Null]
-- city: VARCHAR(100) [Not Null] [Indexed for fast - searching]
-- zip_code: VARCHAR(20) [Not Null]
-- property_type: VARCHAR(50) [Not Null]
-- bedrooms: INTEGER
-- bathrooms: INTEGER
-- square_meters: FLOAT
-- year_built: INTEGER
-- Relationships: Cascades deletes to listings, audits, - and anomalies.
+---
 
-2. **listings Table** (Child of Properties)
-- id: UUID [Primary Key]
-- property_id: UUID [Foreign Key -> properties.id] [ON - DELETE CASCADE]
-- asking_price: NUMERIC(15, 2) [Not Null]
-- status: VARCHAR(50) [Not Null] [Indexed]
-- listed_date: DATETIME (Timezone aware) [Default: - Current server time]
+## 2. Product Vision and User Experience
 
-3. **audits Table** (Child of Properties)
-- id: UUID [Primary Key]
-- property_id: UUID [Foreign Key -> properties.id] [ON - DELETE CASCADE]
-- estimated_rental_income: NUMERIC(12, 2)
-- estimated_maintenance_costs: NUMERIC(12, 2)
-- gross_yield_percentage: FLOAT
-- calculated_at: DATETIME (Timezone aware) [Default: - Current server time]
+### User Stories
+- As an analyst, I want to search properties by city and budget so I can shortlist candidates quickly.
+- As an analyst, I want to audit one property by ID so I can estimate yield before deeper review.
+- As a developer, I want simple endpoints and predictable payloads so the frontend can render results reliably.
 
-4. **anomalies Table** (Child of Properties)
-- id: UUID [Primary Key]
-- property_id: UUID [Foreign Key -> properties.id] [ON - DELETE CASCADE]
-- flag_type: VARCHAR(100) [Not Null]
-- description: TEXT [Not Null]
-- severity: VARCHAR(20) [Not Null]
+### Core MVP Features
+- Property search endpoint (`/api/search`)
+- Property audit endpoint (`/api/audit`)
+- Health endpoint (`/health`)
+- React frontend with search form and audit form
+- Docker Compose setup for backend and frontend services
 
-## Usefule git commands
+---
 
-**important: work on your own branch.**
+## 3. System Architecture and Technical Stack
+
+### Stack
+- Backend: FastAPI + SQLAlchemy
+- Frontend: React (Vite)
+- Database: PostgreSQL-compatible URL (Neon in current env file)
+- Runtime: Docker Compose
+
+### Why this stack
+- FastAPI provides clear request models and fast API iteration
+- SQLAlchemy keeps DB access explicit and portable
+- React/Vite gives a lightweight local UI for endpoint consumption
+- Docker Compose standardizes local run and reduces machine drift
+
+### High-level Flow
+1. Frontend sends request to backend API.
+2. API validates payload and calls service layer.
+3. Service layer queries database via SQLAlchemy session.
+4. API returns JSON response consumed by frontend.
+
+### Repository Structure
+
+```text
+ML_Ops_Group_Repo/
+├── development/                 # Notebook-first experimentation
+│   ├── database.py
+│   ├── models.py
+│   ├── dev_search/
+│   └── dev_audit/
+├── prod/                        # Production-style application
+│   ├── backend/
+│   │   ├── app/
+│   │   │   ├── api/             # FastAPI routes
+│   │   │   ├── core/            # DB/session config
+│   │   │   ├── models/          # SQLAlchemy models
+│   │   │   ├── services/        # Business logic
+│   │   │   └── main.py
+│   │   ├── Dockerfile
+│   │   └── run.py
+│   ├── frontend/
+│   │   ├── src/
+│   │   ├── Dockerfile
+│   │   └── package.json
+│   ├── docker-compose.yml
+│   ├── .env_prod
+│   └── test.ipynb
+└── README.md
+```
+
+---
+
+## 4. Engineering Excellence and Operational Readiness
+
+### Current Operational Constraints
+- Search and audit depend entirely on a valid `DATABASE_URL`.
+- No authentication/authorization layer yet.
+- No migration framework yet (schema expected to exist in target DB).
+
+### Production Readiness Checklist
+- [ ] Add DB migration tooling (Alembic)
+- [ ] Add API auth and role-based access
+- [ ] Add structured logging and request tracing
+- [ ] Add retry/backoff for transient DB/network errors
+- [ ] Add CI pipeline for linting/tests/image build
+
+### Sanity Checks
+- Backend health: `GET /health`
+- Search API: `POST /api/search`
+- Audit API: `POST /api/audit`
+- Frontend load: open `http://localhost:3000`
+
+### Observability to Add
+- API latency (`/api/search`, `/api/audit`)
+- Error rates by endpoint and status code
+- Database connection failures/timeouts
+
+### Near-term Roadmap
+- Add anomaly endpoint and UI card
+- Add input validation and stronger error messages
+- Add pagination/sorting to search results
+
+---
+
+## 5. Domain Analysis and Limitations
+
+### Functional Limits
+- Audit uses fixed assumptions (`4.5%` rental income, `1%` maintenance)
+- Search is filter-based only (no ranking/recommendation model)
+- No multi-user state or saved portfolios
+
+### Non-functional Considerations
+- Security: currently open API with permissive CORS
+- Scalability: no caching or async DB pattern yet
+- Data quality: assumes core listing fields are complete and accurate
+
+### Key Risk
+**Risk:** backend and notebook may connect to different databases if environment variables differ.
+
+**Mitigation:** keep one authoritative database URL for prod (`prod/.env_prod`) and verify with health + query smoke tests before demos.
+
+---
+
+## 6. Team and Collaboration
+
+### Team Working Model
+- Notebook-first development under `development/`
+- API-first stabilization under `prod/backend/`
+- UI integration under `prod/frontend/`
+
+### Branching and Delivery
+- Feature branches by function area (search/audit)
+- Small, focused commits and endpoint-level validation
+- Integration verified through Docker Compose and manual API checks
+
+---
+
+## Run Guide
+
+### Prerequisites
+- Docker Desktop running
+- `DATABASE_URL` available in `prod/.env_prod`
+
+### Start
 
 ```bash
-git clone <repository_url>
+cd prod
+docker compose up --build
 ```
 
-**2. Pull Latest Changes** 
+### Access
+- Frontend: `http://localhost:3000`
+- Backend API docs: `http://localhost:8000/docs`
+- Health: `http://localhost:8000/health`
 
-```bash
-git pull origin <branch_name>
+---
+
+## API Examples
+
+### Search
+
+```http
+POST /api/search
+Content-Type: application/json
+
+{
+  "city": "Paris",
+  "price_min": 100000,
+  "price_max": 900000,
+  "limit": 5
+}
 ```
 
-**3. Add Changes**
+### Audit
 
-```bash
-git add .
-```
+```http
+POST /api/audit
+Content-Type: application/json
 
-(or specify files)
-
-```bash
-git add <file_name>
-```
-
-
-**4. Commit Changes**
-
-```bash
-git commit -m "commit message"
-```
-
-**5. Push Changes**
-
-```bash
-git push origin <branch_name>
-```
-
-Example:
-
-```bash
-git push origin main
-```
-
-**6. Create Branch**
-```
-git branch <branch_name>
-```
-
-**7. Switch Branch**
-```
-git checkout <branch_name>
+{
+  "property_id": "11111111-1111-1111-1111-111111111111"
+}
 ```
