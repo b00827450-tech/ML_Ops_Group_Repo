@@ -82,6 +82,10 @@ Frontend Display
 - No financial evaluation
 
 2. Audit Service
+- Retrieves property and listing data for financial audit
+- Calculates estimated rental income, maintenance costs, and gross yield percentage
+- Detects anomalies based on audit rules, such as low yield
+- Returns audit records and anomaly indicators for downstream evaluation
 
 
 ### Repository Structure
