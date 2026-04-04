@@ -62,6 +62,28 @@ This project provides a simple API + frontend workflow to:
 3. Service layer queries database via SQLAlchemy session.
 4. API returns JSON response consumed by frontend.
 
+### Example Pipeline
+User Input
+   ↓
+Search Service (filter properties)
+   ↓
+Audit Service (ROI + rule-based evaluation)
+   ↓
+Evaluation Layer (future ML scoring)
+   ↓
+FastAPI Response
+   ↓
+Frontend Display
+
+### Service Responsibilites
+1. Search Service
+- Retrieves properties based on filters (city, price range)
+- Returns candidate property list
+- No financial evaluation
+
+2. Audit Service
+
+
 ### Repository Structure
 
 ```text
@@ -90,7 +112,6 @@ ML_Ops_Group_Repo/
 │   └── test.ipynb
 └── README.md
 ```
-
 ---
 
 ## 4. Engineering Excellence and Operational Readiness
