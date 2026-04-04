@@ -83,9 +83,10 @@ Frontend Display
 
 2. Audit Service
 - Retrieves property and listing data for financial audit
+- Uses listing price as the basis for financial estimation
 - Calculates estimated rental income, maintenance costs, and gross yield percentage
-- Detects anomalies based on audit rules, such as low yield
-- Returns audit records and anomaly indicators for downstream evaluation
+- Applies rule-based checks to detect anomalies, such as low yield
+- Returns computed audit metrics and anomaly indicators for downstream evaluation
 
 
 ### Repository Structure
