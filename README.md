@@ -231,24 +231,25 @@ Content-Type: application/json
 }
 ```
 
-## API Response Examples
+### API Response Examples
 
-Search Response
+```json
 {
-  "results": [
-    {
-      "property_id": "...",
-      "city": "Paris",
-      "price": 500000
-    }
-  ]
-}
+  "search_response": {
+    "results": [
+      {
+        "property_id": "11111111-1111-1111-1111-111111111111",
+        "city": "Paris",
+        "price": 500000
+      }
+    ]
+  },
 
-Audit Response
-{
-  "property_id": "...",
-  "estimated_rental_income": 20000,
-  "estimated_maintenance_costs": 5000,
-  "gross_yield_percentage": 4.5,
-  "anomalies": ["Low Yield"]
+  "audit_response": {
+    "property_id": "11111111-1111-1111-1111-111111111111",
+    "estimated_rental_income": 20000,
+    "estimated_maintenance_costs": 5000,
+    "gross_yield_percentage": 4.5,
+    "anomalies": ["Low Yield"]
+  }
 }
