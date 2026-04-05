@@ -1,9 +1,5 @@
 # Real Estate Search and Audit Platform
 
-A lightweight full-stack MLOps learning project for property search and investment audit workflows.
-
----
-
 ## 1. Executive Summary
 
 ### Problem Statement
@@ -93,30 +89,58 @@ Frontend Display
 
 ```text
 ML_Ops_Group_Repo/
-├── development/                 # Notebook-first experimentation
+├── .env
+├── .gitignore
+├── README.md
+├── development/                         # Notebook-first experimentation
+│   ├── __init__.py
 │   ├── database.py
 │   ├── models.py
 │   ├── dev_search/
+│   │   ├── evaluation_search.py
+│   │   └── search.py
 │   └── dev_audit/
-├── prod/                        # Production-style application
-│   ├── backend/
-│   │   ├── app/
-│   │   │   ├── api/             # FastAPI routes
-│   │   │   ├── core/            # DB/session config
-│   │   │   ├── models/          # SQLAlchemy models
-│   │   │   ├── services/        # Business logic
-│   │   │   └── main.py
-│   │   ├── Dockerfile
-│   │   └── run.py
-│   ├── frontend/
-│   │   ├── src/
-│   │   ├── Dockerfile
-│   │   └── package.json
-│   ├── docker-compose.yml
-│   ├── .env_prod
-│   └── test.ipynb
-└── README.md
+│       ├── __init__.py
+│       ├── audit_api.py
+│       ├── audit_dev.ipynb
+│       ├── audit_update.py
+│       ├── audit.ipynb
+│       └── validation.py
+└── prod/                                # Production-style application
+  ├── docker-compose.yml
+  ├── README.md
+  ├── test.ipynb
+  ├── backend/
+  │   ├── Dockerfile
+  │   ├── requirements.txt
+  │   ├── run.py
+  │   └── app/
+  │       ├── __init__.py
+  │       ├── main.py
+  │       ├── api/                     # FastAPI routes
+  │       │   ├── __init__.py
+  │       │   ├── audit.py
+  │       │   └── search.py
+  │       ├── core/                    # DB/session config
+  │       │   ├── __init__.py
+  │       │   ├── config.py
+  │       │   └── database.py
+  │       ├── models/                  # SQLAlchemy models
+  │       │   ├── __init__.py
+  │       │   └── models.py
+  │       └── services/                # Business logic
+  │           ├── __init__.py
+  │           ├── audit.py
+  │           └── search.py
+  └── frontend/
+    ├── Dockerfile
+    ├── index.html
+    ├── package.json
+    └── src/
+      ├── App.jsx
+      └── main.jsx
 ```
+
 ---
 
 ## 4. Engineering Excellence and Operational Readiness
