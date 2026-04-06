@@ -12,7 +12,7 @@ This project provides a simple API + frontend workflow to:
 - expose the results through a minimal React UI.
 
 ### Target Persona
-- Internal analysts and students exploring MLOps/API patterns
+- Internal analysts and agents
 - Product and data teams prototyping property intelligence features
 
 ### Value Proposition
@@ -25,7 +25,7 @@ This project provides a simple API + frontend workflow to:
 ## 2. Product Vision and User Experience
 
 ### User Stories
-- As an analyst, I want to search properties by city and budget so I can shortlist candidates quickly.
+- As an agent, I want to search properties by city and budget so I can shortlist candidates quickly.
 - As an analyst, I want to audit one property by ID so I can estimate yield before deeper review.
 - As a developer, I want simple endpoints and predictable payloads so the frontend can render results reliably.
 
