@@ -95,8 +95,8 @@ ML_Ops_Group_Repo/
 ├── DataStructure.md
 ├── development/                         # Notebook-first experimentation (Batch dev and unit test)
 │   ├── __init__.py
-│   ├── database.py
-│   ├── models.py
+│   ├── database.py                      # database connection
+│   ├── models.py                        # define data structure (LLM generated via prompt)
 │   ├── dev_search/
 │   │   ├── evaluation_search.py
 │   │   └── search.py
@@ -104,9 +104,10 @@ ML_Ops_Group_Repo/
 │       ├── __init__.py
 │       ├── audit_api.py
 │       ├── audit_dev.ipynb
-│       ├── audit_update.py
 │       ├── audit.ipynb
-│       └── validation.py
+│       └── batch_update/                # batch update all the audit
+│           ├── audit_update.py
+│           └── validation.py
 └── prod/                                # Production-style application (real-time application, UAT)
   ├── docker-compose.yml
   ├── README.md
@@ -126,7 +127,7 @@ ML_Ops_Group_Repo/
   │       │   ├── __init__.py
   │       │   ├── config.py
   │       │   └── database.py
-  │       ├── models/                  # SQLAlchemy models
+  │       ├── models/                  # SQLAlchemy models (refer to DataStructure.md)
   │       │   ├── __init__.py
   │       │   └── models.py
   │       └── services/                # Business logic
@@ -157,6 +158,37 @@ ML_Ops_Group_Repo/
 - [ ] Add structured logging and request tracing
 - [ ] Add retry/backoff for transient DB/network errors
 - [ ] Add CI pipeline for linting/tests/image build
+
+### Scalability Strategy
+- API: run multiple backend replicas behind a reverse proxy/load balancer.
+- Database: use connection pooling, read replicas for heavy search traffic, and indexed query paths.
+- Caching: introduce Redis for common search filters and short-lived audit responses.
+- Workload split: move expensive audit/anomaly operations to background workers for non-blocking API latency.
+- Frontend delivery: serve static assets through CDN and enable gzip/brotli compression.
+
+### Fallback and Resilience Design
+- Database unavailable:
+   - Return a clear degraded-service response (HTTP 503) with retry guidance.
+   - Keep health endpoint status explicit so orchestrators can restart unhealthy instances.
+- External latency spikes:
+   - Apply timeout limits and retry with exponential backoff for transient failures.
+   - Use circuit breaker logic to avoid cascading failures.
+- Partial service failure:
+   - Keep search endpoint available even if audit/anomaly components are temporarily disabled.
+   - Provide default "audit_pending" status when full audit cannot complete in SLA.
+- Deployment rollback:
+   - Maintain versioned Docker images and one-click rollback to previous stable release.
+
+### CI/CD Pipeline (Target State)
+1. Trigger on pull requests and merges to main.
+2. Run lint + format checks for backend and frontend.
+3. Run unit/integration API tests and smoke tests for key endpoints.
+4. Build backend/frontend Docker images with immutable tags.
+5. Scan dependencies and images for known vulnerabilities.
+6. Push approved images to registry.
+7. Deploy to staging and run post-deploy health checks.
+8. Require manual approval for production deploy, then run smoke validation.
+9. Auto-notify team channel on success/failure with links to logs and artifacts.
 
 ### Sanity Checks
 - Backend health: `GET /health`
@@ -209,29 +241,31 @@ ML_Ops_Group_Repo/
 
 ---
 
-## Run Guide
+## Run Guide 
 
-### Prerequisites
+### Real-Time
+
+#### Prerequisites
 - Docker Desktop running
 - `DATABASE_URL` available in `prod/.env_prod`
 
-### Start
+#### Start
 
 ```bash
 cd prod
 docker compose up --build
 ```
 
-### Access
+#### Access
 - Frontend: `http://localhost:3000`
 - Backend API docs: `http://localhost:8000/docs`
 - Health: `http://localhost:8000/health`
 
 ---
 
-## API Examples
+#### API Examples
 
-### Search
+##### Search
 
 ```http
 POST /api/search
@@ -245,7 +279,7 @@ Content-Type: application/json
 }
 ```
 
-### Audit
+##### Audit
 
 ```http
 POST /api/audit
@@ -255,4 +289,8 @@ Content-Type: application/json
   "property_id": "11111111-1111-1111-1111-111111111111"
 }
 ```
-
+### Batch-Update (to be config)
+Run py files under dev_audit/audit_update. 
+   - audit_update.py would audit all the records(or selected records). 
+   - validation.py would further validate the result.
+Once the frequency and scope was decided, this can be applied in prod via docker.
