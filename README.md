@@ -50,13 +50,5 @@ We’ve moved beyond "data experiments" to a reliable product by owning the full
 * **Business-First:** Our architecture ensures business goals, not tech limits, drive the roadmap.
 * **High Velocity:** Clear ownership means faster pivots and zero "too many cooks" friction.
 
-### **Resilience: Trustworthy & Scalable**
-We’ve built the system to be hard to break and easy to trust:
-* **Zero Downtime:** Background updates are decoupled; if a calculation fails, the UI stays live.
-* **Explainable Data:** Persisted outputs create a "paper trail" for every audit and flag.
-* **Modular Growth:** We can upgrade logic (like anomaly detection) without touching the rest of the stack.
-* **Proactive Quality:** Automated checks catch errors before they reach the analysts' screens.
-
-
 ## The Bottom Line
 We’ve replaced messy spreadsheets with a professional, automated engine that streamlines your real-estate screening into a single, scalable interface.
