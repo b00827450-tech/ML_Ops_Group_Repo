@@ -92,7 +92,8 @@ ML_Ops_Group_Repo/
 ├── .env
 ├── .gitignore
 ├── README.md
-├── development/                         # Notebook-first experimentation
+├── DataStructure.md
+├── development/                         # Notebook-first experimentation (Batch dev and unit test)
 │   ├── __init__.py
 │   ├── database.py
 │   ├── models.py
@@ -106,7 +107,7 @@ ML_Ops_Group_Repo/
 │       ├── audit_update.py
 │       ├── audit.ipynb
 │       └── validation.py
-└── prod/                                # Production-style application
+└── prod/                                # Production-style application (real-time application, UAT)
   ├── docker-compose.yml
   ├── README.md
   ├── test.ipynb
