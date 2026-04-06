@@ -230,6 +230,11 @@ ML_Ops_Group_Repo/
 ## 6. Team and Collaboration
 
 ### Team Working Model
+WanYang --- Audit Function Dev & Related Dcouments  
+Lin     --- Search Function Dev & Related Dcouments  
+Artur   --- Abnormal Detection Function & Related Dcouments  
+Shan    --- Architect, Proj Management & Related Dcouments  
+  
 - Notebook-first development under `development/`
 - API-first stabilization under `prod/backend/`
 - UI integration under `prod/frontend/`
@@ -292,5 +297,5 @@ Content-Type: application/json
 ### Batch-Update (to be config)
 Run py files under dev_audit/audit_update. 
    - audit_update.py would audit all the records(or selected records). 
-   - validation.py would further validate the result.
+   - validation.py would further validate the result.  
 Once the frequency and scope was decided, this can be applied in prod via docker.
