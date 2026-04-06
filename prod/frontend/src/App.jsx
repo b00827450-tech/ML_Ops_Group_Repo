@@ -11,6 +11,8 @@ export default function App() {
 
   const [propertyId, setPropertyId] = useState("");
   const [auditData, setAuditData] = useState(null);
+  const [anomalyPropertyId, setAnomalyPropertyId] = useState("");
+  const [anomalyData, setAnomalyData] = useState(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -37,6 +39,7 @@ export default function App() {
     e.preventDefault();
     setError("");
     setAuditData(null);
+    setAnomalyData(null);
 
     try {
       const data = await postJson("/api/search", {
@@ -69,6 +72,22 @@ export default function App() {
     }
   }
 
+  async function handleAnomaly(e) {
+    e.preventDefault();
+    setError("");
+
+    try {
+      if (!anomalyPropertyId.trim()) {
+        setError("Property ID is required");
+        return;
+      }
+      const data = await postJson("/api/anomaly", { property_id: anomalyPropertyId });
+      setAnomalyData(data);
+    } catch (err) {
+      setError(err.message);
+    }
+  }
+
   return (
     <main style={{ color: "#111", background: "#fff", minHeight: "100vh", padding: "12px" }}>
       <h1>Real Estate</h1>
@@ -88,7 +107,7 @@ export default function App() {
           <ul>
             {searchData.results.map((item) => (
               <li key={item.id}>
-                {item.address} - {item.city} (${item.asking_price})
+                {item.address} - {item.city} (${item.asking_price}) - ID: {item.id}
               </li>
             ))}
           </ul>
@@ -106,6 +125,49 @@ export default function App() {
           <p>
             Audit {auditData.action}: {auditData.address} ({auditData.yield.toFixed(2)}%)
           </p>
+          <p>Estimated rental income: ${auditData.estimated_rental_income.toFixed(2)} / year</p>
+          <p>Estimated maintenance costs: ${auditData.estimated_maintenance_costs.toFixed(2)} / year</p>
+        </div>
+      )}
+
+      <h2>Anomaly Detection</h2>
+      <form onSubmit={handleAnomaly}>
+        <input
+          placeholder="Property ID"
+          value={anomalyPropertyId}
+          onChange={(e) => setAnomalyPropertyId(e.target.value)}
+        />
+        <button type="submit">Detect anomaly</button>
+      </form>
+
+      {anomalyData && (
+        <div>
+          <p>
+            Anomaly {anomalyData.action}: {anomalyData.address} (
+            {anomalyData.yield == null ? "yield n/a" : `${anomalyData.yield.toFixed(2)}%`})
+          </p>
+          <p>
+            {anomalyData.red_flag
+              ? `Red flag triggered (${anomalyData.comparables_analyzed} comparables analyzed)`
+              : "No anomaly triggered"}
+          </p>
+          {anomalyData.price_per_square_meter != null && (
+            <p>Price per sqm: ${anomalyData.price_per_square_meter.toFixed(2)}</p>
+          )}
+          {anomalyData.peer_average_price_per_square_meter != null && (
+            <p>
+              Peer average price per sqm: ${anomalyData.peer_average_price_per_square_meter.toFixed(2)}
+            </p>
+          )}
+          {anomalyData.anomalies?.length > 0 && (
+            <ul>
+              {anomalyData.anomalies.map((item) => (
+                <li key={`${item.flag_type}-${item.id}`}>
+                  {item.flag_type}: {item.description}
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
       )}
 

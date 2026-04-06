@@ -46,5 +46,4 @@ class Anomaly(Base):
     property_id = Column(UUID(as_uuid=True), ForeignKey("properties.id", ondelete="CASCADE"), nullable=False)
     flag_type = Column(String(100), nullable=False)
     description = Column(Text, nullable=False)
-    severity = Column(String(20), nullable=False)
     property = relationship("Property", back_populates="anomalies")

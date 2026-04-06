@@ -1,13 +1,24 @@
-FROM python:3.10-slim
+FROM python:3.11-slim AS builder
+
+ENV POETRY_NO_INTERACTION=1
+
+WORKDIR /build
+
+RUN pip install --no-cache-dir poetry
+
+COPY pyproject.toml poetry.lock ./
+RUN poetry install --only main --no-root \
+    && cp -a "$(poetry env info --path)" /opt/venv
+
+FROM python:3.11-slim
+
+ENV PATH="/opt/venv/bin:$PATH" \
+    PYTHONUNBUFFERED=1
 
 WORKDIR /app
 
-# Install dependencies
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
-
-# Copy backend files
-COPY . .
+COPY --from=builder /opt/venv /opt/venv
+COPY backend/ /app/
 
 EXPOSE 8000
 

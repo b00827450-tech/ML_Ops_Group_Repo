@@ -3,7 +3,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from .api import search, audit
+from .api import anomaly, audit, search
 
 app = FastAPI(title="Real Estate API", version="1.0.0")
 
@@ -19,6 +19,7 @@ app.add_middleware(
 # Include routers
 app.include_router(search.router)
 app.include_router(audit.router)
+app.include_router(anomaly.router)
 
 @app.get("/health")
 def health():

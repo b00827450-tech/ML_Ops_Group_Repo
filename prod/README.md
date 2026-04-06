@@ -40,5 +40,26 @@ Body:
 }
 ```
 
+The audit now estimates:
+- `estimated_rental_income`
+- `estimated_maintenance_costs`
+- `gross_yield_percentage`
+
+These values are derived heuristically from property attributes such as city, zip code, property type, size, room count, and year built.
+
+### `POST /api/anomaly`
+Body:
+
+```json
+{
+  "property_id": "11111111-1111-1111-1111-111111111111"
+}
+```
+
+Anomaly detection now checks:
+- low yield when an audit exists
+- missing or invalid basic property info
+- suspiciously cheap or wildly overpriced price-per-square-meter versus similar homes in the same zip code
+
 ### `GET /health`
 Returns API health.
